@@ -9,12 +9,12 @@ st.set_page_config(page_title="Resume Converter", layout="centered")
 API_URL = "https://resumetemplateconverter.onrender.com/convert-resume/"
 
 # --- UI ---
-st.title("📄 Resume Template Converter")
+st.title("Resume Template Converter")
 st.write("Upload your resume and select a template to format it.")
 
 template_id = st.selectbox(
     "Select a Template",
-    ("template1", "template2")
+    ("old template", "new template")
 )
 
 uploaded_file = st.file_uploader(
@@ -30,8 +30,8 @@ if st.button("Convert Resume"):
         try:
             with st.spinner(f"Converting using {template_id}..."):
 
-                # === THIS IS THE "INTEGRATION" ===
-                # Your Streamlit frontend calls your FastAPI backend.
+                # === INTEGRATION===
+               
                 response = requests.post(API_URL, files=files, params=params)
                 # ===================================
 
@@ -50,4 +50,5 @@ if st.button("Convert Resume"):
         except requests.exceptions.RequestException as e:
             st.error(f"Network Error: Could not connect to API. {e}")
     else:
+
         st.warning("Please upload a file first.")
