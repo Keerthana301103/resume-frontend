@@ -41,7 +41,7 @@ if st.button("Convert Resume"):
                 response = requests.post(API_URL, files=files, params=params)
 
                 if response.status_code == 200:
-                    st.success("Conversion successful!)
+                    st.success("Conversion successful!")
                     
                     # --- 2. START: New Download & Display Logic ---
                     
@@ -75,3 +75,4 @@ if st.button("Convert Resume"):
             st.error(f"Network Error: Could not connect to API. {e}")
     else:
         st.warning("Please upload a file first.")
+
