@@ -9,12 +9,19 @@ st.set_page_config(page_title="Resume Converter", layout="centered")
 API_URL = "https://resumetemplateconverter.onrender.com/convert-resume/"
 
 # --- UI ---
-st.title("Resume Template Converter")
+st.title("📄 Resume Template Converter")
 st.write("Upload your resume and select a template to format it.")
 
-template_id = st.selectbox(
+# --- FIX 1: Create a dictionary to map names to IDs ---
+TEMPLATE_OPTIONS = {
+    "Old Template": "template1",
+    "New Template": "template2"
+}
+
+# --- FIX 2: Use the dictionary keys (the names) in the selectbox ---
+selected_template_name = st.selectbox(
     "Select a Template",
-    ("old template", "new template")
+    TEMPLATE_OPTIONS.keys() # Shows "Old Template" and "New Template"
 )
 
 uploaded_file = st.file_uploader(
@@ -24,14 +31,18 @@ uploaded_file = st.file_uploader(
 
 if st.button("Convert Resume"):
     if uploaded_file is not None:
+        
+        # --- FIX 3: Get the correct ID from the dictionary ---
+        template_id_to_send = TEMPLATE_OPTIONS[selected_template_name]
+        
         files = {'file': (uploaded_file.name, uploaded_file.getvalue())}
-        params = {'template_id': template_id}
+        params = {'template_id': template_id_to_send} # Send "template1" or "template2"
 
         try:
-            with st.spinner(f"Converting using {template_id}..."):
+            with st.spinner(f"Converting using {selected_template_name}..."):
 
-                # === INTEGRATION===
-               
+                # === INTEGRATION ===
+                
                 response = requests.post(API_URL, files=files, params=params)
                 # ===================================
 
@@ -41,7 +52,7 @@ if st.button("Convert Resume"):
                     st.download_button(
                         label="Download Formatted Resume",
                         data=BytesIO(response.content),
-                        file_name=f"{template_id}_Formatted_{uploaded_file.name}",
+                        file_name=f"{template_id_to_send}_Formatted_{uploaded_file.name}",
                         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                     )
                 else:
